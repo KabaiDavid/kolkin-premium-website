@@ -74,9 +74,9 @@ const jsonld = [{
 
     <div class="wrap">
       <div class="map" data-map>
-        <button type="button" class="map-facade" data-map-load aria-label="Load interactive Google map of Kølkin Coffee">
+        <button type="button" class="map-facade" data-map-load>
           <Image src={lounge} alt="" widths={[800, 1400]} sizes="100vw" loading="lazy" />
-          <span class="map-cta btn btn--light">Show map <Arrow /></span>
+          <span class="map-cta btn btn--light">Show map<span class="sr-only"> of Kølkin Coffee (loads Google Maps)</span> <Arrow /></span>
         </button>
         <template data-map-tpl>
           <iframe title="Map: Kølkin Coffee, 2736 Charlestown Rd #5, New Albany, IN" src={business.mapEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>

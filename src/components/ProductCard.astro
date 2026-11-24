@@ -10,9 +10,9 @@ const v12 = p.variants.find((v) => v.title === '12oz' && v.available) ?? p.varia
 const Tag = compact ? 'h3' : 'h2';
 ---
 <article class={`card ${compact ? 'card--compact' : ''}`} style={`--tint:${p.tint}; --accent:${p.accent}`}>
-  <a href={`/products/${p.handle}`} class="card-media" aria-label={`${p.title}, from ${money(p.priceFrom)}`}>
+  <a href={`/products/${p.handle}`} class="card-media" tabindex="-1" aria-hidden="true">
     {index !== undefined && <span class="card-idx label num" aria-hidden="true">{String(index).padStart(2, '0')}</span>}
-    <Image src={p.bag} alt="" widths={compact ? [300, 480] : [420, 680, 900]} sizes={compact ? '(min-width: 1000px) 22vw, 46vw' : '(min-width: 1000px) 40vw, 92vw'} loading={eager ? 'eager' : 'lazy'} class="card-bag" />
+    <Image src={p.bag} alt="" widths={compact ? [200, 320] : [240, 400, 560]} sizes={compact ? '(min-width: 1000px) 12vw, 26vw' : '(min-width: 1000px) 22vw, 50vw'} loading={eager ? 'eager' : 'lazy'} class="card-bag" />
     <ul class="card-notes" aria-hidden="true">{p.notes.map((n) => <li>{n}</li>)}</ul>
   </a>
   <div class="card-body">
@@ -23,7 +23,7 @@ const Tag = compact ? 'h3' : 'h2';
       {v12 ? (
         <button type="button" class="card-add"
           data-add={JSON.stringify({ variantId: v12.id, handle: p.handle, title: p.title, variantTitle: v12.title, price: v12.price, image: thumb.src })}
-          aria-label={`Add ${p.title}, ${v12.title}, ${money(v12.price)} to bag`}>+ {v12.title}</button>
+          >+ {v12.title}<span class="sr-only"> — add {p.title} to bag, {money(v12.price)}</span></button>
       ) : <span class="label label--muted">Sold out</span>}
     </div>
   </div>
@@ -32,9 +32,9 @@ const Tag = compact ? 'h3' : 'h2';
 <style>
   .card { display: grid; gap: 16px; }
   .card-media { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 5; background: var(--tint); overflow: hidden; }
-  .card-media :global(.card-bag) { height: 82%; width: auto; filter: drop-shadow(0 26px 28px rgba(20,14,8,.28)); transition: transform 1.1s var(--ease); }
+  .card-media :global(.card-bag) { position: absolute; left: 50%; top: 9%; translate: -50% 0; height: 82%; width: auto; max-width: none; filter: drop-shadow(0 26px 28px rgba(20,14,8,.28)); transition: transform 1.1s var(--ease); }
   .card-media:hover :global(.card-bag), .card-media:focus-visible :global(.card-bag) { transform: translateY(-10px) rotate(-1.5deg) scale(1.02); }
-  .card-idx { position: absolute; top: 16px; left: 16px; color: color-mix(in srgb, var(--ink) 60%, transparent); }
+  .card-idx { position: absolute; top: 16px; left: 16px; color: var(--ink-soft); }
   .card-notes { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; opacity: 0; transform: translateY(10px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
   .card-notes li { font: 560 .62rem/1 var(--sans); font-stretch: 118%; letter-spacing: .14em; text-transform: uppercase; padding: 8px 10px; background: color-mix(in srgb, var(--paper) 82%, transparent); }
   .card-media:hover .card-notes, .card-media:focus-visible .card-notes { opacity: 1; transform: none; }

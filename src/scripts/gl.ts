@@ -38,6 +38,11 @@ export function createScene(canvas: HTMLCanvasElement, frag: string, maxDpr = 1.
     canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
   if (!gl) return null;
   for (const ext of extensions) if (!gl.getExtension(ext)) return null;
+  // Software rasterisers (no GPU) can't run full-screen shaders smoothly: keep the still image.
+  const force = new URLSearchParams(location.search).has('gl');
+  const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+  const renderer = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : '';
+  if (!force && /swiftshader|llvmpipe|software|basic render/i.test(renderer)) return null;
 
   const compile = (type: number, src: string) => {
     const s = gl.createShader(type)!;
@@ -93,20 +98,29 @@ export function createScene(canvas: HTMLCanvasElement, frag: string, maxDpr = 1.
 }
 
 /** Runs `frame` only while `el` is on screen and the tab is visible. */
-export function visibleLoop(el: Element, frame: (t: number) => void, { still = false } = {}) {
+export function visibleLoop(el: Element, frame: (t: number) => void, opts: { still?: boolean } = {}) {
+  let still = !!opts.still;
   let raf = 0;
   let onScreen = false;
   const start = performance.now();
+  // Adaptive guard: if frames are consistently slow (weak GPU), settle on a still frame.
+  let last = 0, slow = 0, frames = 0;
+  const force = new URLSearchParams(location.search).has('gl');
   const tick = (now: number) => {
     frame((now - start) / 1000);
+    if (last && ++frames > 10) slow = now - last > 48 ? slow + 1 : Math.max(0, slow - 1);
+    last = now;
+    if (slow > 24 && !force) { still = true; return; }
     if (!still) raf = requestAnimationFrame(tick);
   };
   const run = () => {
     cancelAnimationFrame(raf);
+    last = 0;
     if (onScreen && !document.hidden) raf = requestAnimationFrame(tick);
   };
   const io = new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }, { rootMargin: '120px' });
   io.observe(el);
   document.addEventListener('visibilitychange', run);
-  return { kick: () => { if (onScreen) requestAnimationFrame(tick); } };
+  // Render a single frame on demand while settled (e.g. scroll-driven scenes).
+  return { kick: () => { if (onScreen && still) requestAnimationFrame((now) => frame((now - start) / 1000)); } };
 }

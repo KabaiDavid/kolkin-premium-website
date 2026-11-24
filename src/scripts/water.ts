@@ -84,7 +84,6 @@ export function initHero(canvas: HTMLCanvasElement, poster: HTMLImageElement, ma
 
 /* ───────────── Eddy ───────────── */
 const EDDY = /* glsl */ `
-#extension GL_OES_standard_derivatives : enable
 precision highp float;
 uniform vec2 uRes; uniform float uTime; uniform float uP; uniform vec2 uPtr; uniform vec2 uCupC;
 ${NOISE}
@@ -121,7 +120,8 @@ void main(){
   float r = length(q);
 
   float h = field(q, t, cup);
-  vec2 g = vec2(dFdx(h), dFdy(h)) * min(uRes.x, uRes.y);
+  float e = 1.5 / min(uRes.x, uRes.y);
+  vec2 g = vec2(field(q + vec2(e, 0.0), t, cup) - h, field(q + vec2(0.0, e), t, cup) - h) / e;
   g /= 1.0 + length(g)*0.12;                       // tame quad-derivative spikes
   vec3 nrm = normalize(vec3(-g, 7.0));
   vec3 L = normalize(vec3(-0.45, 0.55, 0.7));
@@ -180,8 +180,19 @@ void main(){
 }`;
 
 export function initEddy(section: HTMLElement, canvas: HTMLCanvasElement) {
-  const scene = createScene(canvas, EDDY, innerWidth < 760 ? 1 : 1.25, ['OES_standard_derivatives']);
-  if (!scene) { section.classList.add('no-gl'); return; }
+  // Liquid is soft by nature: render below CSS resolution and let the browser upscale.
+  const scene = createScene(canvas, EDDY, innerWidth < 760 ? 0.7 : 0.6);
+  if (!scene) {
+    // Photographic fallback: river → cup, cross-faded by scroll progress.
+    section.classList.add('no-gl');
+    const set = () => {
+      const r = section.getBoundingClientRect();
+      section.style.setProperty('--p', Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight))).toFixed(3));
+    };
+    addEventListener('scroll', set, { passive: true });
+    set();
+    return;
+  }
   const { gl, u, resize, draw } = scene;
   let p = 0, pTarget = 0;
   const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -220,6 +231,6 @@ export function initEddy(section: HTMLElement, canvas: HTMLCanvasElement) {
     section.style.setProperty('--p', p.toFixed(4));
     draw();
   }, { still: reduce });
-  if (reduce) addEventListener('scroll', () => loop.kick(), { passive: true });
+  addEventListener('scroll', () => loop.kick(), { passive: true });
   canvas.classList.add('is-ready');
 }

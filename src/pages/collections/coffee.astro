@@ -30,8 +30,8 @@ const jsonld = [{
 >
   <header class="col-head wrap">
     <p class="label eyebrow" data-reveal>The coffee · {products.length} roasts</p>
-    <Lines as="h1" class="mega col-title" lines={['Find your', '*current.*']} />
-    <div class="col-intro" data-reveal style="--d:.2s">
+    <Lines as="h1" class="mega col-title" lines={['Small batch.', '*Whole bean.*']} />
+    <div class="col-intro">
       <p class="lead">Single origins and a house espresso blend, roasted in small batches in Southern Indiana and sold as whole bean.</p>
       {uniformPricing && (
         <ul class="col-sizes" aria-label="Bag sizes and prices">
@@ -69,7 +69,7 @@ const jsonld = [{
 
 <style>
   .col-head { padding-top: calc(var(--header-h) + clamp(40px, 7vw, 110px)); padding-bottom: clamp(48px, 7vw, 100px); display: grid; gap: 26px; }
-  :global(.col-title) { font-size: clamp(4rem, 14vw, 13rem); }
+  :global(.col-title) { font-size: clamp(3.6rem, 9.4vw, 10rem); }
   .col-intro { display: grid; gap: 28px; max-width: 560px; }
   .col-sizes { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
   .col-sizes li { display: grid; gap: 4px; padding-top: 14px; }

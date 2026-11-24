@@ -80,8 +80,8 @@ const jsonld = [
 
       <div class="gallery">
         <figure class="g-main">
-          <span class="g-word" aria-hidden="true">{p.origin}</span>
-          <Image src={p.bag} alt={`${p.title} — 12oz whole bean bag with the Kølkin river label`} widths={[480, 760, 1100]} sizes="(min-width: 1000px) 50vw, 92vw" loading="eager" fetchpriority="high" class="g-bag" />
+          <span class="g-word" aria-hidden="true" data-word={p.origin}></span>
+          <Image src={p.bag} alt={`${p.title} — 12oz whole bean bag with the Kølkin river label`} widths={[300, 480, 720]} sizes="(min-width: 1000px) 360px, 46vw" loading="eager" fetchpriority="high" class="g-bag" />
         </figure>
         {p.label && (
           <figure class="g-label">
@@ -240,8 +240,9 @@ const jsonld = [
   .crumbs a:hover { color: var(--copper); }
   .gallery { display: grid; gap: 16px; min-width: 0; }
   .g-main { position: relative; background: var(--tint); aspect-ratio: 4 / 5; display: grid; place-items: center; overflow: hidden; }
+  .g-word::before { content: attr(data-word); }
   .g-word { position: absolute; top: 5%; left: 0; right: 0; text-align: center; font: italic 300 clamp(4rem, 15vw, 11rem)/1 var(--serif); letter-spacing: -.045em; color: color-mix(in srgb, var(--accent) 30%, transparent); }
-  .g-main :global(.g-bag) { position: relative; height: 80%; width: auto; margin-top: 10%; filter: drop-shadow(0 40px 40px rgba(20,14,8,.3)); }
+  .g-main :global(.g-bag) { position: absolute; left: 50%; bottom: 7%; translate: -50% 0; height: 76%; width: auto; max-width: none; filter: drop-shadow(0 40px 40px rgba(20,14,8,.3)); }
   .motion .g-main :global(.g-bag) { animation: bag-in 1.4s var(--ease) both .1s; }
   @keyframes bag-in { from { opacity: 0; transform: translateY(40px) rotate(-2deg); } }
   .g-label .media { aspect-ratio: 820 / 560; background: #fff; }

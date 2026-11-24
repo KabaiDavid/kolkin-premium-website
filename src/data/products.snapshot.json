@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-11-24T22:51:06.568Z",
+  "syncedAt": "2026-11-24T23:00:37.193Z",
   "products": [
     {
       "id": 7980604686525,
@@ -51,7 +51,7 @@
         }
       ],
       "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/COL_DECAF.png?v=1771531462",
-      "updatedAt": "2026-11-24T17:51:06-05:00"
+      "updatedAt": "2026-11-24T18:00:37-05:00"
     },
     {
       "id": 7980605145277,
@@ -104,7 +104,7 @@
         }
       ],
       "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/COL_HUI_EXC_b3793b40-f97b-437f-a00e-abf8892bac5e.png?v=1771531394",
-      "updatedAt": "2026-11-24T17:51:06-05:00"
+      "updatedAt": "2026-11-24T18:00:37-05:00"
     },
     {
       "id": 7980605505725,
@@ -155,7 +155,7 @@
         }
       ],
       "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/ESPRESSO_BLEND_5168b802-de57-4509-8930-415f513f771f.png?v=1771531285",
-      "updatedAt": "2026-11-24T17:51:06-05:00"
+      "updatedAt": "2026-11-24T18:00:37-05:00"
     },
     {
       "id": 7980605374653,
@@ -208,7 +208,7 @@
         }
       ],
       "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/GUAT_HUE_a6e4c767-8f66-4450-aefb-ccea7d47f30f.png?v=1771531340",
-      "updatedAt": "2026-11-24T17:51:06-05:00"
+      "updatedAt": "2026-11-24T18:00:37-05:00"
     },
     {
       "id": 7980605046973,
@@ -261,7 +261,7 @@
         }
       ],
       "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/ethio_6b1c70b5-a6a9-4e46-9613-46c5bac60bdf.png?v=1771531430",
-      "updatedAt": "2026-11-24T17:51:06-05:00"
+      "updatedAt": "2026-11-24T18:00:37-05:00"
     }
   ]
 }

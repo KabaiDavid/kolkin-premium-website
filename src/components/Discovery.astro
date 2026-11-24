@@ -12,7 +12,7 @@ const thumbs = await Promise.all(products.map((p) => getImage({ src: p.bag, widt
   <div class="stage" aria-hidden="true" style={`--tint:${products[0].tint}`} data-stage>
     <div class="stage-word" data-stage-word>{products[0].origin}</div>
     {products.map((p, i) => (
-      <Image src={p.bag} alt="" widths={[420, 640, 860]} sizes="(min-width: 1000px) 30vw, 1px" class={`stage-bag ${i === 0 ? 'is-on' : ''}`} data-stage-bag={p.handle} loading={i === 0 ? 'lazy' : 'lazy'} />
+      <Image src={p.bag} alt="" widths={[300, 460, 640]} sizes="(min-width: 1000px) 300px, 1px" class={`stage-bag ${i === 0 ? 'is-on' : ''}`} data-stage-bag={p.handle} loading={i === 0 ? 'lazy' : 'lazy'} />
     ))}
     <div class="stage-notes" data-stage-notes>
       {products[0].notes.map((n) => <span>{n}</span>)}
@@ -26,7 +26,7 @@ const thumbs = await Promise.all(products.map((p) => getImage({ src: p.bag, widt
         <li class="row" style={`--tint:${p.tint}; --accent:${p.accent}`} data-row={p.handle} data-origin={p.origin} data-notes={JSON.stringify(p.notes)}>
           <a class="row-link" href={`/products/${p.handle}`} aria-label={`${p.title} — from ${money(p.priceFrom)}`}></a>
           <div class="row-thumb" aria-hidden="true">
-            <Image src={p.bag} alt="" widths={[300, 520]} sizes="(min-width: 1000px) 1px, 60vw" loading="lazy" />
+            <Image src={p.bag} alt="" widths={[200, 360]} sizes="(min-width: 1000px) 1px, 180px" loading="lazy" />
           </div>
           <span class="row-num label num">{String(i + 1).padStart(2, '0')}</span>
           <div class="row-main">
@@ -41,8 +41,8 @@ const thumbs = await Promise.all(products.map((p) => getImage({ src: p.bag, widt
             {p.available && v12?.available ? (
               <button type="button" class="btn btn--ghost row-add"
                 data-add={JSON.stringify({ variantId: v12.id, handle: p.handle, title: p.title, variantTitle: v12.title, price: v12.price, image: thumbs[i].src })}
-                aria-label={`Add ${p.title}, ${v12.title}, ${money(v12.price)} to bag`}>
-                Add {v12.title} · {money(v12.price)}
+                >
+                Add {v12.title} · {money(v12.price)}<span class="sr-only"> — {p.title}</span>
               </button>
             ) : <span class="label label--muted">Sold out</span>}
             <span class="row-go" aria-hidden="true"><Arrow /></span>
@@ -91,8 +91,8 @@ const thumbs = await Promise.all(products.map((p) => getImage({ src: p.bag, widt
   .row { position: relative; scroll-snap-align: start; background: var(--tint); display: grid; grid-template-rows: auto auto 1fr auto; padding: 18px 18px 20px; gap: 8px; isolation: isolate; }
   .row-link { position: absolute; inset: 0; z-index: 1; }
   .row-link:focus-visible { outline-offset: -4px; }
-  .row-thumb { aspect-ratio: 1 / 1.05; display: grid; place-items: center; margin: 0 -18px 4px; }
-  .row-thumb img { height: 100%; width: auto; object-fit: contain; filter: drop-shadow(0 18px 24px rgba(20,14,8,.28)); }
+  .row-thumb { position: relative; aspect-ratio: 1 / 1.05; margin: 0 -18px 4px; }
+  .row-thumb :global(img) { position: absolute; left: 50%; top: 0; translate: -50% 0; height: 100%; width: auto; max-width: none; object-fit: contain; filter: drop-shadow(0 18px 24px rgba(20,14,8,.28)); }
   .row-num { color: var(--ink-soft); order: -1; }
   .row-title { font: 360 1.9rem/1 var(--serif); letter-spacing: -.02em; }
   .row-title em { display: block; font-style: italic; font-weight: 300; font-size: 1.15rem; margin-top: 4px; color: var(--ink-soft); }
