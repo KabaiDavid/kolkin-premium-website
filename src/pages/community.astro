@@ -1,0 +1,114 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Lines from '../components/Lines.astro';
+import Arrow from '../components/Arrow.astro';
+import { business } from '../data/site';
+
+import lounge from '../assets/photos/shop-lounge.jpg';
+import counter from '../assets/photos/shop-counter.jpg';
+import orderHere from '../assets/photos/shop-order-here.jpg';
+import bar from '../assets/photos/shop-espresso-bar.jpg';
+---
+<Base
+  title="Community — A Place to Gather in New Albany | Kølkin Coffee"
+  description="More than a coffee shop: Kølkin is a gathering place for writers, neighbors and small business owners in Southern Indiana. Read Community Connections, rent our space for meetings and events, or join the team."
+>
+  <section class="c-hero wrap" aria-labelledby="c-title">
+    <p class="label eyebrow" data-reveal>Community</p>
+    <Lines as="h1" id="c-title" class="mega c-title" lines={['More than', 'a place to *coffee.*']} />
+    <p class="lead c-intro" data-reveal style="--d:.2s">From bestselling authors to first-time novelists, from small business owners to neighbors just looking for their morning brew — Kølkin is about creating a space to pause, connect, and dream big.</p>
+  </section>
+
+  <section class="c-strip" aria-label="Inside the shop">
+    <div class="strip-track">
+      <figure class="s1 media" data-reveal="mask"><Image src={lounge} alt="The long lounge with leather sofas and framed art" widths={[640, 1000, 1400]} sizes="(min-width: 1000px) 46vw, 88vw" loading="eager" /></figure>
+      <figure class="s2 media" data-reveal="mask" style="--d:.1s"><Image src={orderHere} alt="Pendant lights over the counter and an ‘Order Here’ sign" widths={[480, 800]} sizes="(min-width: 1000px) 22vw, 60vw" loading="eager" /></figure>
+      <figure class="s3 media" data-reveal="mask" style="--d:.2s"><Image src={counter} alt="Baristas behind the reclaimed-wood counter" widths={[640, 1000]} sizes="(min-width: 1000px) 30vw, 80vw" loading="lazy" /></figure>
+    </div>
+  </section>
+
+  <section class="section cc" aria-labelledby="cc-t">
+    <div class="wrap cc-grid">
+      <div class="cc-label"><p class="label eyebrow">Kølkin Community Connections</p><p class="label label--muted">Episode 1</p></div>
+      <figure class="cc-quote">
+        <blockquote data-reveal>
+          <p>“I’ve written several of my novels here, and the encouragement of Gary, Lanette, and this community has been incredible. It took 12 years to hit the bestseller list — and Kolkin has been a dream defender every step of the way.”</p>
+        </blockquote>
+        <figcaption data-reveal><span class="h3">Kristy Cambron</span><span class="label label--muted">USA Today bestselling author of <em>The French Kitchen</em></span></figcaption>
+        <a class="link" href="/journal/community-connections-episode-1" data-reveal>Read her story <Arrow /></a>
+      </figure>
+    </div>
+  </section>
+
+  <section id="rent" class="section on-dark rent" aria-labelledby="rent-t">
+    <div class="wrap rent-grid">
+      <div class="media rent-img" data-reveal="mask"><Image src={bar} alt="The Kølkin espresso bar, available with a barista for private events" widths={[640, 1000, 1400]} sizes="(min-width: 1000px) 50vw, 100vw" loading="lazy" /></div>
+      <div class="rent-txt">
+        <p class="label eyebrow">Rent our space</p>
+        <h2 id="rent-t" class="display">Gather <em>here.</em></h2>
+        <p class="lead">Our retail shop is available to rent for meetings, gatherings, and small events.</p>
+        <dl class="rent-rates">
+          <div><dt class="label">Space</dt><dd class="num"><span class="h2">$75</span> / hour</dd></div>
+          <div><dt class="label">With a barista</dt><dd class="num"><span class="h2">$100</span> / hour</dd></div>
+        </dl>
+        <p class="body-copy">To reserve your time slot, please call the shop directly.</p>
+        <a class="btn btn--light" href={business.phoneHref}>Call {business.phoneDisplay} <Arrow /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section join" aria-labelledby="join-t">
+    <div class="wrap join-grid">
+      <h2 id="join-t" class="h1" data-reveal>Become a <em>shopkeeper.</em></h2>
+      <div class="join-txt" data-reveal>
+        <p class="body-copy">Our baristas are shopkeepers: they craft every drink to the menu, build community with walk-in and drive-through guests, and keep the shop clean, safe and warm.</p>
+        <div class="join-ctas">
+          <a class="link" href="/careers">Careers at Kølkin <Arrow /></a>
+          <a class="link" href={business.social.instagram} target="_blank" rel="noopener">Follow on Instagram <Arrow /></a>
+          <a class="link" href={business.social.facebook} target="_blank" rel="noopener">Facebook <Arrow /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .c-hero { padding-top: calc(var(--header-h) + clamp(40px, 7vw, 110px)); padding-bottom: clamp(40px, 6vw, 80px); display: grid; gap: 24px; }
+  :global(.c-title) { font-size: clamp(3.4rem, 10vw, 10rem); }
+  .c-intro { max-width: 44ch; }
+  @media (min-width: 1000px) { .c-intro { margin-left: 50%; } }
+  .c-strip { overflow: hidden; }
+  .strip-track { display: grid; grid-auto-flow: column; grid-auto-columns: 84vw; gap: 12px; overflow-x: auto; padding: 0 var(--gutter); scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .strip-track::-webkit-scrollbar { display: none; }
+  .strip-track figure { scroll-snap-align: center; aspect-ratio: 4 / 5; }
+  @media (min-width: 1000px) {
+    .strip-track { grid-auto-flow: row; grid-template-columns: 6fr 3fr 4fr; overflow: visible; max-width: var(--max); margin: 0 auto; gap: var(--gutter); align-items: start; }
+    .s1 { aspect-ratio: 4 / 3 !important; }
+    .s2 { aspect-ratio: 3 / 4 !important; margin-top: 18%; }
+    .s3 { aspect-ratio: 4 / 5 !important; margin-top: 6%; }
+  }
+  .cc-grid { display: grid; gap: 32px; }
+  .cc-label .label:first-child { color: var(--copper); }
+  .cc-quote { display: grid; gap: 22px; justify-items: start; }
+  .cc-quote blockquote p { font: italic 300 clamp(1.8rem, 3.6vw, 3.3rem)/1.18 var(--serif); letter-spacing: -.02em; text-wrap: balance; }
+  .cc-quote figcaption { display: grid; gap: 6px; }
+  @media (min-width: 1000px) { .cc-grid { grid-template-columns: 3fr 9fr; gap: var(--gutter); } }
+
+  .rent-grid { display: grid; gap: 40px; align-items: center; }
+  .rent-img { aspect-ratio: 4 / 3; }
+  .rent-txt { display: grid; gap: 22px; justify-items: start; }
+  .rent-txt .lead { color: rgba(243,237,226,.85); max-width: 32ch; }
+  .rent-rates { display: grid; grid-template-columns: 1fr 1fr; width: 100%; max-width: 440px; border-top: 1px solid var(--line-light); }
+  .rent-rates div { padding-top: 16px; display: grid; gap: 6px; }
+  .rent-rates div + div { border-left: 1px solid var(--line-light); padding-left: 18px; }
+  .rent-rates dt { color: var(--copper-light); }
+  .rent-rates dd { color: rgba(243,237,226,.75); }
+  .rent-rates .h2 { color: var(--cream); }
+  @media (min-width: 1000px) { .rent-grid { grid-template-columns: 7fr 5fr; gap: calc(var(--gutter) * 2); } }
+
+  .join-grid { display: grid; gap: 28px; }
+  .join-txt { display: grid; gap: 22px; }
+  .join-ctas { display: flex; flex-wrap: wrap; gap: 12px 32px; }
+  @media (min-width: 1000px) { .join-grid { grid-template-columns: 6fr 6fr; gap: var(--gutter); align-items: end; } }
+</style>

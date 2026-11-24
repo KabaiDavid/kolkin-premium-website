@@ -1,0 +1,109 @@
+---
+import Wordmark from './Wordmark.astro';
+import Arrow from './Arrow.astro';
+import OpenStatus from './OpenStatus.astro';
+import { business, hoursSummary, SHOP_DOMAIN } from '../data/site';
+import { products } from '../data/catalog';
+const year = new Date().getFullYear();
+---
+<footer class="footer on-dark" aria-labelledby="footer-title">
+  <h2 id="footer-title" class="sr-only">Kølkin Coffee</h2>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-news">
+        <p class="label eyebrow">Letters from the eddy</p>
+        <p class="h3 f-news-title">New roasts, shop news and community stories — occasionally, never noise.</p>
+        <form class="f-form" method="post" action={`${SHOP_DOMAIN}/contact#newsletter`} accept-charset="UTF-8">
+          <input type="hidden" name="form_type" value="customer" />
+          <input type="hidden" name="utf8" value="✓" />
+          <input type="hidden" name="contact[tags]" value="newsletter" />
+          <label for="f-email" class="sr-only">Email address</label>
+          <input id="f-email" class="input" type="email" name="contact[email]" autocomplete="email" placeholder="Your email address" required />
+          <button class="btn btn--light" type="submit">Subscribe <Arrow /></button>
+        </form>
+        <p class="f-fine">Subscribing takes you to our Shopify store to confirm.</p>
+      </div>
+
+      <nav class="f-cols" aria-label="Footer">
+        <div>
+          <p class="label f-h">Coffee</p>
+          <ul>
+            {products.map((p) => <li><a href={`/products/${p.handle}`}>{p.origin}{p.region && p.origin !== 'Espresso' ? ` — ${p.region}` : p.origin === 'Espresso' ? ' Blend' : ''}</a></li>)}
+            <li><a href="/collections/coffee">All coffee</a></li>
+            <li><a href={business.giftCardsUrl} target="_blank" rel="noopener">Gift cards</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="label f-h">Kølkin</p>
+          <ul>
+            <li><a href="/our-story">Our story</a></li>
+            <li><a href="/community">Community</a></li>
+            <li><a href="/journal">Journal</a></li>
+            <li><a href="/wholesale">Wholesale</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="label f-h">Visit</p>
+          <address>
+            <a href={business.directionsUrl} target="_blank" rel="noopener">{business.address.street}<br />{business.address.city}, {business.address.region} {business.address.postal}</a>
+          </address>
+          <ul class="f-hours">
+            {hoursSummary.map((h) => <li><span>{h.days}</span><span class="num">{h.time}</span></li>)}
+          </ul>
+          <OpenStatus class="f-open" />
+          <ul class="f-inline">
+            <li><a href="/menu">Café menu</a></li>
+            <li><a href="/visit#order-ahead">Order ahead</a></li>
+            <li><a href={business.phoneHref} class="num">{business.phoneDisplay}</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <a href="/" class="f-mark" aria-label="Kølkin Coffee — home"><Wordmark /></a>
+
+    <div class="f-bottom">
+      <p>© {year} Kolkin Coffee · Est. {business.founded} · Roasted in Southern Indiana</p>
+      <ul class="f-inline">
+        <li><a href={business.social.instagram} target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href={business.social.facebook} target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href={`${SHOP_DOMAIN}/policies/privacy-policy`} rel="noopener">Privacy</a></li>
+        <li><a href={`${SHOP_DOMAIN}/policies/shipping-policy`} rel="noopener">Shipping</a></li>
+        <li><a href={`${SHOP_DOMAIN}/policies/refund-policy`} rel="noopener">Refunds</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { padding-top: clamp(72px, 9vw, 140px); padding-bottom: 28px; background: var(--char); position: relative; overflow: hidden; }
+  .f-top { display: grid; gap: 64px; }
+  .f-news-title { margin-top: 20px; max-width: 22ch; }
+  .f-form { margin-top: 32px; display: grid; grid-template-columns: 1fr; gap: 14px; max-width: 520px; }
+  .f-form .input { border-bottom-color: rgba(243,237,226,.35); }
+  .f-fine { font-size: .78rem; color: rgba(243,237,226,.5); margin-top: 12px; }
+  .f-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 44px 24px; }
+  .f-cols > div:last-child { grid-column: 1 / -1; }
+  .f-h { color: var(--copper-light); margin-bottom: 18px; }
+  .f-cols ul li a, .f-cols address a { display: inline-block; padding: 6px 0; color: rgba(243,237,226,.82); transition: color .3s; font-size: .97rem; }
+  .f-cols a:hover { color: var(--cream); }
+  address { font-style: normal; line-height: 1.5; }
+  .f-hours { margin-top: 14px; display: grid; gap: 4px; max-width: 320px; }
+  .f-hours li { display: flex; justify-content: space-between; gap: 16px; font-size: .9rem; color: rgba(243,237,226,.7); }
+  :global(.f-open) { margin-top: 16px; }
+  .f-inline { display: flex; flex-wrap: wrap; gap: 2px 20px; margin-top: 10px; }
+  .f-inline a { display: inline-block; padding: 8px 0; font-size: .9rem; color: rgba(243,237,226,.75); }
+  .f-inline a:hover { color: var(--cream); }
+  .f-mark { display: block; margin-top: clamp(64px, 9vw, 140px); color: var(--cream); opacity: .95; }
+  .f-bottom { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line-light); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: .82rem; color: rgba(243,237,226,.55); }
+  .f-bottom .f-inline { margin: 0; }
+  .f-bottom .f-inline a { font-size: .82rem; }
+  @media (min-width: 640px) { .f-form { grid-template-columns: 1fr auto; align-items: end; } }
+  @media (min-width: 1000px) {
+    .f-top { grid-template-columns: 5fr 7fr; gap: var(--gutter); }
+    .f-cols { grid-template-columns: 1fr 1fr 1.3fr; }
+    .f-cols > div:last-child { grid-column: auto; }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Lines from '../../components/Lines.astro';
+import Arrow from '../../components/Arrow.astro';
+import { articles } from '../../data/journal';
+import lounge from '../../assets/photos/shop-lounge.jpg';
+
+const fmt = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+---
+<Base
+  title="Journal — Community Connections & Stories | Kølkin Coffee"
+  description="Stories from the Kølkin Coffee community in Southern Indiana and Kentuckiana — the people who gather, create, and dream at our shop."
+>
+  <header class="j-head wrap">
+    <p class="label eyebrow" data-reveal>The journal</p>
+    <Lines as="h1" class="mega" lines={['Every cup', '*tells a story.*']} />
+    <p class="lead j-intro" data-reveal style="--d:.15s">Kølkin Community Connections — a recurring spotlight on the people who gather, create, and dream at our shop.</p>
+  </header>
+
+  <section class="wrap j-list" aria-label="Articles">
+    {articles.map((a) => (
+      <article class="j-feature">
+        <a href={`/journal/${a.slug}`} class="j-media media" data-reveal="mask" aria-hidden="true" tabindex="-1">
+          <Image src={lounge} alt="" widths={[640, 1000, 1400]} sizes="(min-width: 1000px) 58vw, 100vw" loading="eager" />
+        </a>
+        <div class="j-txt" data-reveal>
+          <p class="label j-kicker">{a.kicker}</p>
+          <h2 class="h1"><a href={`/journal/${a.slug}`}>{a.title}</a></h2>
+          <p class="body-copy">{a.excerpt}</p>
+          <p class="label label--muted"><time datetime={a.date}>{fmt(a.date)}</time> · {a.readMinutes} min read · {a.author}</p>
+          <a href={`/journal/${a.slug}`} class="link">Read the story <Arrow /></a>
+        </div>
+      </article>
+    ))}
+    <aside class="j-next" data-reveal>
+      <p class="h3">More Community Connections are on the way.</p>
+      <p class="body-copy">Follow along on <a class="text-link" href="https://www.instagram.com/kolkincoffee/" target="_blank" rel="noopener">Instagram</a> for what’s brewing.</p>
+    </aside>
+  </section>
+</Base>
+
+<style>
+  .j-head { padding-top: calc(var(--header-h) + clamp(40px, 7vw, 110px)); padding-bottom: clamp(48px, 6vw, 90px); display: grid; gap: 24px; }
+  .j-intro { max-width: 40ch; }
+  .j-list { padding-bottom: clamp(72px, 10vw, 150px); display: grid; gap: 64px; }
+  .j-feature { display: grid; gap: 28px; }
+  .j-media { aspect-ratio: 3 / 2; display: block; }
+  .j-txt { display: grid; gap: 18px; justify-items: start; align-content: center; }
+  .j-kicker { color: var(--copper); }
+  .j-txt h2 a:hover { color: var(--copper); }
+  .j-next { border-top: 1px solid var(--line); padding-top: 28px; display: grid; gap: 10px; max-width: 560px; }
+  @media (min-width: 1000px) { .j-feature { grid-template-columns: 7fr 5fr; gap: calc(var(--gutter) * 1.5); } }
+</style>

@@ -1,0 +1,102 @@
+---
+import Arrow from './Arrow.astro';
+import { business } from '../data/site';
+---
+<dialog id="bag" class="bag" aria-labelledby="bag-title" data-bag>
+  <div class="bag-panel">
+    <header class="bag-head">
+      <h2 id="bag-title" class="h3">Your bag <span class="num bag-head-count" data-bag-headcount></span></h2>
+      <button type="button" class="bag-close" data-bag-close aria-label="Close bag">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
+    </header>
+
+    <div class="ship" data-ship data-threshold={business.freeShippingThreshold}>
+      <p class="ship-text" data-ship-text>Free shipping on orders over ${business.freeShippingThreshold}.</p>
+      <div class="ship-track" aria-hidden="true"><span data-ship-bar></span></div>
+    </div>
+
+    <ul class="bag-lines" data-bag-lines aria-live="polite"></ul>
+
+    <div class="bag-empty" data-bag-empty>
+      <p class="lead">Your bag is resting in the eddy.</p>
+      <p class="body-copy">Five small-batch coffees, roasted in Southern Indiana.</p>
+      <a href="/collections/coffee" class="btn" data-bag-close-link>Explore the coffee <Arrow /></a>
+    </div>
+
+    <footer class="bag-foot" data-bag-foot>
+      <dl class="bag-sub">
+        <dt>Subtotal</dt>
+        <dd class="num" data-bag-subtotal>$0.00</dd>
+      </dl>
+      <p class="bag-note">Shipping and taxes are calculated at checkout. Checkout is secured by Shopify.</p>
+      <a class="btn btn--block" href="/cart" data-checkout>Checkout <Arrow /></a>
+      <a class="link bag-view" href="/cart">View full bag</a>
+    </footer>
+  </div>
+</dialog>
+
+<template id="bag-line-tpl">
+  <li class="line">
+    <a class="line-img" data-l-link><img alt="" width="80" height="100" loading="lazy" data-l-img /></a>
+    <div class="line-info">
+      <a class="line-title" data-l-link data-l-title></a>
+      <p class="line-variant label label--muted" data-l-variant></p>
+      <div class="qty" role="group" aria-label="Quantity">
+        <button type="button" data-l-dec aria-label="Decrease quantity">−</button>
+        <span class="num" data-l-qty aria-live="polite"></span>
+        <button type="button" data-l-inc aria-label="Increase quantity">+</button>
+      </div>
+    </div>
+    <div class="line-end">
+      <p class="num line-price" data-l-price></p>
+      <button type="button" class="line-remove" data-l-remove>Remove</button>
+    </div>
+  </li>
+</template>
+
+<style is:global>
+  .bag {
+    position: fixed; inset: 0 0 0 auto; width: min(460px, 100%); height: 100dvh; max-height: none; margin: 0 0 0 auto; padding: 0; border: 0;
+    background: var(--paper); color: var(--ink);
+    transform: translateX(100%); transition: transform .7s var(--ease), display .7s allow-discrete, overlay .7s allow-discrete;
+  }
+  .bag[open] { transform: none; }
+  @starting-style { .bag[open] { transform: translateX(100%); } }
+  .bag::backdrop { background: rgba(14,17,15,0); transition: background .6s var(--ease), display .6s allow-discrete, overlay .6s allow-discrete; }
+  .bag[open]::backdrop { background: rgba(14,17,15,.5); }
+  @starting-style { .bag[open]::backdrop { background: rgba(14,17,15,0); } }
+  .bag-panel { height: 100%; display: flex; flex-direction: column; }
+  .bag-head { display: flex; justify-content: space-between; align-items: center; padding: 22px var(--gutter); border-bottom: 1px solid var(--line); }
+  .bag-head-count { font: 500 .95rem var(--sans); color: var(--ink-soft); }
+  .bag-close { width: 44px; height: 44px; display: grid; place-items: center; margin-right: -12px; }
+  .bag-close svg { width: 14px; height: 14px; }
+  .ship { padding: 16px var(--gutter); border-bottom: 1px solid var(--line); }
+  .ship-text { font-size: var(--fs-small); color: var(--ink-soft); }
+  .ship-track { height: 2px; background: var(--line); margin-top: 10px; overflow: hidden; }
+  .ship-track span { display: block; height: 100%; background: var(--olive); transform-origin: left; transform: scaleX(0); transition: transform .8s var(--ease); }
+  .bag-lines { flex: 1; overflow-y: auto; padding: 0 var(--gutter); overscroll-behavior: contain; }
+  .line { display: grid; grid-template-columns: 80px 1fr auto; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .line-img { background: var(--sand); display: block; aspect-ratio: 4/5; overflow: hidden; }
+  .line-img img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+  .line-title { font: 400 1.15rem/1.2 var(--serif); display: block; }
+  .line-variant { margin-top: 6px; }
+  .qty { display: inline-flex; align-items: center; border: 1px solid var(--line); margin-top: 12px; }
+  .qty button { width: 40px; height: 40px; font-size: 1.1rem; transition: background .2s; }
+  .qty button:hover { background: var(--cream); }
+  .qty span { min-width: 28px; text-align: center; font-size: .95rem; }
+  .line-end { text-align: right; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; }
+  .line-price { font-size: 1rem; }
+  .line-remove { font-size: var(--fs-small); color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; min-height: 40px; }
+  .line-remove:hover { color: var(--copper); }
+  .bag-empty { flex: 1; padding: 40px var(--gutter); display: grid; align-content: start; gap: 16px; }
+  .bag-empty .btn { justify-self: start; margin-top: 12px; }
+  .bag-foot { padding: 20px var(--gutter) calc(20px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); display: grid; gap: 14px; background: var(--paper); }
+  .bag-sub { display: flex; justify-content: space-between; align-items: baseline; }
+  .bag-sub dt { font: 600 var(--fs-label) var(--sans); letter-spacing: .16em; text-transform: uppercase; font-stretch: 118%; }
+  .bag-sub dd { font: 400 1.5rem var(--serif); }
+  .bag-note { font-size: .8rem; color: var(--ink-soft); }
+  .bag-view { justify-self: center; }
+  [data-bag][data-empty='true'] [data-bag-foot], [data-bag][data-empty='true'] [data-bag-lines] { display: none; }
+  [data-bag][data-empty='false'] [data-bag-empty] { display: none; }
+</style>

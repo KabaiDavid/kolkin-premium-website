@@ -1,0 +1,21 @@
+{
+  "name": "kolkin-coffee",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "sync": "node scripts/sync-products.mjs",
+    "dev": "astro dev",
+    "build": "node scripts/sync-products.mjs --soft && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.4.13"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/sitemap": "^3.7.6",
+    "sharp": "^0.35.5",
+    "typescript": "^6.0.3"
+  }
+}

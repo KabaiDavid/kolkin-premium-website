@@ -1,0 +1,162 @@
+---
+import Wordmark from './Wordmark.astro';
+import Arrow from './Arrow.astro';
+import OpenStatus from './OpenStatus.astro';
+import { nav, business } from '../data/site';
+
+interface Props { overlay?: boolean }
+const { overlay = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(href + '/') || (href === '/collections/coffee' && path.startsWith('/products/'));
+const left = nav.slice(0, 3);
+const right = nav.slice(3);
+---
+<header class="site-header" data-header data-overlay={overlay ? 'true' : 'false'}>
+  <div class="bar wrap">
+    <button class="menu-btn hide-desktop" type="button" aria-haspopup="dialog" aria-controls="mobile-menu" data-menu-open>
+      <span class="burger" aria-hidden="true"><i></i><i></i></span>
+      <span class="label">Menu</span>
+    </button>
+
+    <nav class="nav nav--left" aria-label="Primary">
+      <ul>
+        {left.map((l) => <li><a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <a href="/" class="brand" aria-label="Kølkin Coffee — home">
+      <Wordmark title="Kølkin Coffee" />
+    </a>
+
+    <nav class="nav nav--right" aria-label="Secondary">
+      <ul>
+        {right.map((l) => <li><a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <button class="bag-btn" type="button" aria-haspopup="dialog" aria-controls="bag" data-bag-open>
+      <span class="label hide-mobile-inline">Bag</span>
+      <svg class="bag-ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7h12l-1 11H5L4 7Z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M7 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+      <span class="bag-count num" data-bag-count hidden></span>
+      <span class="sr-only" data-bag-sr>Open bag, empty</span>
+    </button>
+  </div>
+</header>
+
+<dialog id="mobile-menu" class="mobile-menu on-dark" aria-label="Menu" data-menu>
+  <div class="mm-inner">
+    <div class="mm-top wrap">
+      <button type="button" class="menu-btn" data-menu-close aria-label="Close menu">
+        <span class="burger is-x" aria-hidden="true"><i></i><i></i></span>
+        <span class="label">Close</span>
+      </button>
+      <a href="/" class="brand" aria-label="Kølkin Coffee — home"><Wordmark /></a>
+      <span style="width:64px" aria-hidden="true"></span>
+    </div>
+    <nav class="mm-nav wrap" aria-label="Mobile">
+      <ol>
+        <li style="--i:0"><a href="/"><span class="label num">00</span>Home</a></li>
+        {nav.map((l, i) => (
+          <li style={`--i:${i + 1}`}><a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}><span class="label num">{String(i + 1).padStart(2, '0')}</span>{l.label}</a></li>
+        ))}
+      </ol>
+      <ul class="mm-secondary">
+        <li><a href="/menu">Café menu</a></li>
+        <li><a href="/journal">Journal</a></li>
+        <li><a href={business.giftCardsUrl} rel="noopener" target="_blank">Gift cards</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="mm-foot wrap">
+      <OpenStatus />
+      <p class="mm-addr">{business.address.street}<br />{business.address.city}, {business.address.region} {business.address.postal}</p>
+      <div class="mm-ctas">
+        <a class="btn btn--light" href={business.directionsUrl} target="_blank" rel="noopener">Directions <Arrow /></a>
+        <a class="btn btn--ghost" href={business.phoneHref}>Call</a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .site-header {
+    position: fixed; inset: 0 0 auto; z-index: 50; height: var(--header-h);
+    color: var(--ink);
+    transition: transform .6s var(--ease), color .4s, background-color .4s, border-color .4s;
+    border-bottom: 1px solid transparent;
+  }
+  .site-header[data-overlay='true']:not(.is-solid) { color: var(--cream); }
+  .site-header.is-solid { background: color-mix(in srgb, var(--paper) 94%, transparent); border-bottom-color: var(--line); backdrop-filter: saturate(1.2) blur(10px); -webkit-backdrop-filter: saturate(1.2) blur(10px); }
+  .site-header.is-hidden { transform: translateY(-100%); }
+  .site-header[data-overlay='true']:not(.is-solid)::before {
+    content: ''; position: absolute; inset: 0 0 -40px; z-index: -1; pointer-events: none;
+    background: linear-gradient(rgba(8,12,10,.45), rgba(8,12,10,0));
+  }
+
+  .bar { height: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; }
+  .brand { display: block; width: clamp(150px, 15vw, 210px); justify-self: center; grid-column: 2; padding-block: 10px; transition: opacity .3s; }
+  .brand:hover { opacity: .75; }
+  .nav { display: none; }
+  .nav ul { display: flex; gap: clamp(20px, 2.4vw, 40px); }
+  .nav a {
+    position: relative; font: 560 .75rem/1 var(--sans); font-stretch: 118%; letter-spacing: .14em; text-transform: uppercase; padding-block: 10px;
+  }
+  .nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease); }
+  .nav a:hover::after, .nav a[aria-current='page']::after { transform: scaleX(1); transform-origin: left; }
+
+  .menu-btn { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; grid-column: 1; justify-self: start; }
+  .burger { position: relative; width: 22px; height: 10px; }
+  .burger i { position: absolute; left: 0; right: 0; height: 1.25px; background: currentColor; transition: transform .5s var(--ease); }
+  .burger i:first-child { top: 0; }
+  .burger i:last-child { bottom: 0; right: 6px; }
+  .burger.is-x i:first-child { transform: translateY(4.5px) rotate(45deg); }
+  .burger.is-x i:last-child { right: 0; transform: translateY(-4.5px) rotate(-45deg); }
+
+  .bag-btn { grid-column: 3; justify-self: end; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; min-width: 44px; justify-content: flex-end; }
+  .bag-ico { width: 20px; height: 20px; }
+  .bag-count {
+    min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; display: grid; place-items: center;
+    font: 600 .68rem/1 var(--sans); background: var(--copper); color: var(--cream); transition: transform .4s var(--ease);
+  }
+  .bag-count[hidden] { display: none; }
+  .bag-count.bump { transform: scale(1.25); }
+  .hide-mobile-inline { display: none; }
+
+  @media (min-width: 1000px) {
+    .menu-btn.hide-desktop { display: none; }
+    .nav { display: block; }
+    .nav--left { grid-column: 1; grid-row: 1; justify-self: start; }
+    .nav--right { grid-column: 3; grid-row: 1; justify-self: end; margin-right: 112px; }
+    .bag-btn { grid-column: 3; grid-row: 1; }
+    .hide-mobile-inline { display: inline; }
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+    background: var(--forest); color: var(--cream);
+    opacity: 0; transition: opacity .45s var(--ease), display .45s allow-discrete, overlay .45s allow-discrete;
+  }
+  .mobile-menu[open] { opacity: 1; }
+  @starting-style { .mobile-menu[open] { opacity: 0; } }
+  .mobile-menu::backdrop { background: transparent; }
+  .mm-inner { min-height: 100%; display: flex; flex-direction: column; }
+  .mm-top { height: var(--header-h); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .mm-top .brand { grid-column: 2; }
+  .mm-nav { flex: 1; padding-top: 6vh; }
+  .mm-nav ol li { border-bottom: 1px solid var(--line-light); }
+  .mm-nav ol a {
+    display: flex; align-items: baseline; gap: 18px; padding: 14px 0;
+    font: 330 clamp(2.1rem, 9.5vw, 3.2rem)/1.05 var(--serif); letter-spacing: -.02em;
+  }
+  .mm-nav ol a .label { color: var(--copper-light); min-width: 22px; }
+  .mm-nav ol a[aria-current='page'] { font-style: italic; }
+  .mobile-menu[open] .mm-nav li { animation: mm-in .8s var(--ease) both; animation-delay: calc(.06s * var(--i) + .08s); }
+  @keyframes mm-in { from { opacity: 0; transform: translateY(18px); } }
+  .mm-secondary { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 26px; }
+  .mm-secondary a { font: 500 .95rem/1 var(--sans); color: rgba(243,237,226,.75); display: inline-block; padding: 10px 0; }
+  .mm-foot { padding-block: 28px calc(28px + env(safe-area-inset-bottom)); display: grid; gap: 16px; border-top: 1px solid var(--line-light); margin-top: 28px; }
+  .mm-addr { color: rgba(243,237,226,.75); font-size: .95rem; line-height: 1.5; }
+  .mm-ctas { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
+  @media (min-width: 1000px) { .mobile-menu { display: none; } }
+</style>

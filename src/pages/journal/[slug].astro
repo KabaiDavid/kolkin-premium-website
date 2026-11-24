@@ -1,0 +1,90 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Arrow from '../../components/Arrow.astro';
+import { articles } from '../../data/journal';
+import { SITE_URL } from '../../data/site';
+import lounge from '../../assets/photos/shop-lounge.jpg';
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+const { a } = Astro.props;
+const og = await getImage({ src: lounge, width: 1200, format: 'jpg' });
+const fmt = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+const url = `${SITE_URL}/journal/${a.slug}`;
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${a.kicker}: ${a.title}`,
+    datePublished: a.date,
+    author: { '@type': 'Person', name: a.author },
+    publisher: { '@type': 'Organization', name: 'Kølkin Coffee', logo: { '@type': 'ImageObject', url: `${SITE_URL}/og/kolkin-badge.png` } },
+    image: new URL(og.src, SITE_URL).href,
+    mainEntityOfPage: url,
+    keywords: a.tags.join(', '),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
+      { '@type': 'ListItem', position: 3, name: a.title, item: url },
+    ],
+  },
+];
+---
+<Base title={`${a.title} — ${a.kicker} | Kølkin Coffee`} description={a.excerpt} image={og.src} type="article" jsonld={jsonld}>
+  <article class="art">
+    <header class="art-head wrap">
+      <nav class="label label--muted crumbs" aria-label="Breadcrumb"><a href="/journal">Journal</a> / <span aria-current="page">Episode 1</span></nav>
+      <p class="label art-kicker" data-reveal>{a.kicker}</p>
+      <h1 class="display art-title" data-reveal>{a.title}</h1>
+      <p class="label label--muted" data-reveal>By {a.author} · <time datetime={a.date}>{fmt(a.date)}</time> · {a.readMinutes} min read</p>
+    </header>
+    <figure class="wrap art-fig">
+      <div class="media" data-reveal="mask"><Image src={lounge} alt="The Kølkin coffee shop lounge, where Kristy Cambron has written several of her novels" widths={[800, 1400, 1920]} sizes="(min-width: 1560px) 1460px, 100vw" loading="eager" fetchpriority="high" /></div>
+    </figure>
+    <div class="art-body wrap">
+      <div class="prose">
+        {a.body.map((b) => {
+          if (b.type === 'h2') return <h2 class="h2">{b.text}</h2>;
+          if (b.type === 'quote') return <blockquote><p set:html={`“${b.text}”`} /><footer class="label">— {b.cite}</footer></blockquote>;
+          if (b.type === 'list') return <ul>{b.items!.map((i) => <li>{i}</li>)}</ul>;
+          return <p set:html={b.text} />;
+        })}
+        <div class="art-ctas">
+          <a class="btn" href="/visit">Stop by the shop <Arrow /></a>
+          <a class="link" href="/collections/coffee">Explore our roasts</a>
+        </div>
+        <p class="art-src label label--muted">Originally published on <a class="text-link" href={a.originalUrl}>kolkin.coffee</a>. Tags: {a.tags.join(', ')}.</p>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .art-head { padding-top: calc(var(--header-h) + clamp(32px, 5vw, 80px)); display: grid; gap: 20px; max-width: 1100px; margin-left: 0; }
+  @media (min-width: 1560px) { .art-head { margin-left: auto; margin-right: auto; max-width: var(--max); } }
+  .crumbs a:hover { color: var(--copper); }
+  .art-kicker { color: var(--copper); }
+  .art-title { max-width: 14ch; }
+  .art-fig { margin-top: clamp(32px, 5vw, 64px); }
+  .art-fig .media { aspect-ratio: 16 / 9; }
+  @media (max-width: 759px) { .art-fig .media { aspect-ratio: 4 / 3; } }
+  .art-body { padding-block: clamp(48px, 7vw, 100px) clamp(72px, 10vw, 150px); }
+  .prose { max-width: 680px; margin-inline: auto; font-size: 1.12rem; line-height: 1.75; }
+  .prose > * + * { margin-top: 1.25em; }
+  .prose p:first-child { font: 360 1.5rem/1.5 var(--serif); }
+  .prose h2 { margin-top: 2em; }
+  .prose blockquote { margin: 2em 0; padding: 0; }
+  .prose blockquote p { font: italic 300 clamp(1.6rem, 3vw, 2.3rem)/1.25 var(--serif); letter-spacing: -.015em; }
+  .prose blockquote footer { margin-top: 16px; color: var(--copper); }
+  .prose ul { display: grid; gap: 10px; }
+  .prose ul li { padding-left: 26px; position: relative; }
+  .prose ul li::before { content: ''; position: absolute; left: 0; top: .8em; width: 14px; height: 1px; background: var(--copper); }
+  .art-ctas { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; margin-top: 2.5em !important; }
+  .art-src { margin-top: 3em !important; }
+</style>

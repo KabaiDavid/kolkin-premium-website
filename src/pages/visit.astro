@@ -1,0 +1,184 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Lines from '../components/Lines.astro';
+import Arrow from '../components/Arrow.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import { business, SITE_URL } from '../data/site';
+
+import orderHere from '../assets/photos/shop-order-here.jpg';
+import lounge from '../assets/photos/shop-lounge.jpg';
+import counter from '../assets/photos/shop-counter.jpg';
+
+const smsBody = encodeURIComponent('Pickup order — Name: \nPickup time: \nDrink(s): \nHot / Iced: \nSize: \nMilk: \nFlavor: \nModifications: ');
+const fmt12 = (t: string) => { const [h, m] = t.split(':').map(Number); return `${((h + 11) % 12) + 1}${m ? ':' + String(m).padStart(2, '0') : ''} ${h >= 12 ? 'PM' : 'AM'}`; };
+const week = [1, 2, 3, 4, 5, 6, 0].map((d) => business.hours.find((h) => h.day === d)!);
+
+const jsonld = [{
+  '@context': 'https://schema.org',
+  '@type': 'CafeOrCoffeeShop',
+  '@id': `${SITE_URL}/#business`,
+  name: 'Kølkin Coffee',
+  url: `${SITE_URL}/visit`,
+  telephone: '+1-812-599-8410',
+  address: { '@type': 'PostalAddress', streetAddress: business.address.street, addressLocality: business.address.city, addressRegion: business.address.region, postalCode: business.address.postal, addressCountry: 'US' },
+  hasMap: business.mapsUrl,
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '06:30', closes: '19:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '07:30', closes: '19:00' },
+  ],
+}];
+---
+<Base
+  title="Visit Our Coffee Shop in New Albany, IN — Hours & Directions | Kølkin Coffee"
+  description="Visit Kølkin Coffee at 2736 Charlestown Rd #5, New Albany, Indiana. Open Mon–Fri 6:30 AM–7 PM and Sat 7:30 AM–7 PM, with a drive-through and order-ahead pickup. Minutes from Jeffersonville and Louisville."
+  jsonld={jsonld}
+>
+  <section class="v-hero wrap" aria-labelledby="v-title">
+    <div class="v-hero-txt">
+      <p class="label eyebrow" data-reveal>Visit · {business.address.city}, Indiana</p>
+      <Lines as="h1" id="v-title" class="mega" lines={['Your place', 'to *pause.*']} />
+      <OpenStatus class="v-status" />
+    </div>
+    <div class="v-hero-img media" data-reveal="mask">
+      <Image src={orderHere} alt="Warm pendant lights over the Kølkin Coffee counter, with an ‘Order Here’ sign" widths={[640, 960, 1400]} sizes="(min-width: 1000px) 46vw, 100vw" loading="eager" fetchpriority="high" />
+    </div>
+  </section>
+
+  <section class="section v-info" aria-label="Address and hours">
+    <div class="wrap v-grid">
+      <div class="v-card">
+        <h2 class="label v-k">Address</h2>
+        <address class="h2 v-addr">{business.address.street}<br />{business.address.city}, IN {business.address.postal}</address>
+        <div class="v-ctas">
+          <a class="btn" href={business.directionsUrl} target="_blank" rel="noopener">Get directions <Arrow /></a>
+          <a class="btn btn--ghost" href={business.phoneHref}>Call {business.phoneDisplay}</a>
+        </div>
+        <p class="body-copy">Walk in for a seat in the lounge, or pull through the drive-through.</p>
+      </div>
+      <div class="v-card">
+        <h2 class="label v-k">Hours</h2>
+        <table class="v-hours" data-week>
+          <caption class="sr-only">Opening hours</caption>
+          <tbody>
+            {week.map((d) => (
+              <tr data-day={d.day}>
+                <th scope="row">{d.label}</th>
+                <td class="num">{d.open && d.close ? `${fmt12(d.open)} – ${fmt12(d.close)}` : 'Closed'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="map" data-map>
+        <button type="button" class="map-facade" data-map-load aria-label="Load interactive Google map of Kølkin Coffee">
+          <Image src={lounge} alt="" widths={[800, 1400]} sizes="100vw" loading="lazy" />
+          <span class="map-cta btn btn--light">Show map <Arrow /></span>
+        </button>
+        <template data-map-tpl>
+          <iframe title="Map: Kølkin Coffee, 2736 Charlestown Rd #5, New Albany, IN" src={business.mapEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </template>
+      </div>
+      <p class="map-note label label--muted">Map loads from Google only when you ask for it.</p>
+    </div>
+  </section>
+
+  <section id="order-ahead" class="section on-dark oa" aria-labelledby="oa-t">
+    <div class="wrap oa-grid">
+      <div>
+        <p class="label eyebrow">Order ahead</p>
+        <h2 id="oa-t" class="display">Text it in. <em>Pick it up.</em></h2>
+        <p class="lead oa-lead">Text or call <a class="text-link num" href={business.phoneHref}>{business.phoneDisplay}</a> with your order, then come inside or use the drive-through to collect it.</p>
+        <div class="oa-ctas">
+          <a class="btn btn--light" href={`${business.smsHref}?&body=${smsBody}`}>Text us now <Arrow /></a>
+          <a class="btn btn--ghost" href={business.phoneHref}>Call us now</a>
+        </div>
+        <p class="oa-fine">We’re not able to offer curbside delivery at this time.</p>
+      </div>
+      <div class="oa-list">
+        <p class="label">Please include</p>
+        <ol>
+          {['Name', 'Pickup time', 'Drink order(s)', 'Hot / Iced', 'Size', 'Milk / milk alternative', 'Flavoring', 'Special modifications'].map((x, i) => (
+            <li><span class="label num">{String(i + 1).padStart(2, '0')}</span>{x}</li>
+          ))}
+        </ol>
+        <a href="/menu" class="link">See the full menu <Arrow /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section v-more" aria-labelledby="vm-t">
+    <div class="wrap vm-grid">
+      <div class="media vm-img" data-reveal="mask"><Image src={counter} alt="The Kølkin Coffee counter with bags of fresh roasted coffee" widths={[640, 1000]} sizes="(min-width: 1000px) 50vw, 100vw" loading="lazy" /></div>
+      <div class="vm-txt">
+        <h2 id="vm-t" class="h1">Need the room?</h2>
+        <p class="body-copy">The shop is available to rent for meetings, gatherings and small events — $75 per hour, or $100 per hour with a barista included.</p>
+        <a href="/community#rent" class="link">Rent our space <Arrow /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Highlight today in shop-local time
+  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Indiana/Indianapolis', weekday: 'short' }).format(new Date()));
+  document.querySelector(`[data-week] tr[data-day="${day}"]`)?.classList.add('is-today');
+  // Click-to-load map facade (keeps third-party scripts off the page until asked)
+  const btn = document.querySelector<HTMLButtonElement>('[data-map-load]');
+  btn?.addEventListener('click', () => {
+    const tpl = document.querySelector<HTMLTemplateElement>('[data-map-tpl]')!;
+    const frame = tpl.content.firstElementChild!.cloneNode(true) as HTMLIFrameElement;
+    btn.replaceWith(frame);
+    frame.focus();
+  });
+</script>
+
+<style>
+  .v-hero { padding-top: calc(var(--header-h) + clamp(32px, 5vw, 80px)); display: grid; gap: 32px; }
+  .v-hero-txt { display: grid; gap: 22px; align-content: end; }
+  :global(.v-status) { margin-top: 8px; }
+  .v-hero-img { aspect-ratio: 4 / 5; }
+  @media (min-width: 1000px) {
+    .v-hero { grid-template-columns: 7fr 5fr; column-gap: var(--gutter); align-items: end; }
+    .v-hero-txt { padding-bottom: 40px; }
+    .v-hero-img { aspect-ratio: 4 / 5; }
+  }
+  .v-grid { display: grid; gap: 56px; margin-bottom: 56px; }
+  .v-card { display: grid; gap: 22px; align-content: start; justify-items: start; }
+  .v-k { color: var(--copper); }
+  .v-addr { font-style: normal; }
+  .v-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .v-hours { width: 100%; border-collapse: collapse; }
+  .v-hours th, .v-hours td { padding: 14px 0; border-bottom: 1px solid var(--line); font-weight: 400; text-align: left; }
+  .v-hours th { font: 380 1.2rem var(--serif); }
+  .v-hours td { text-align: right; }
+  .v-hours tr.is-today th, .v-hours tr.is-today td { color: var(--copper); }
+  .v-hours tr.is-today th::after { content: ' · today'; font: 560 .65rem var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+  @media (min-width: 1000px) { .v-grid { grid-template-columns: 1fr 1fr; gap: calc(var(--gutter) * 2); } }
+
+  .map { position: relative; aspect-ratio: 16 / 9; background: var(--sand); overflow: hidden; }
+  .map-facade { position: absolute; inset: 0; width: 100%; display: grid; place-items: center; }
+  .map-facade :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.6) brightness(.55); }
+  .map-cta { position: relative; }
+  .map :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(.25); }
+  .map-note { margin-top: 12px; }
+  @media (max-width: 759px) { .map { aspect-ratio: 4 / 5; } }
+
+  .oa-grid { display: grid; gap: 48px; }
+  .oa-lead { margin-top: 22px; max-width: 34ch; color: rgba(243,237,226,.85); }
+  .oa-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .oa-fine { margin-top: 18px; font-size: .9rem; color: rgba(243,237,226,.6); }
+  .oa-list { display: grid; gap: 18px; align-content: start; justify-items: start; }
+  .oa-list ol { width: 100%; }
+  .oa-list li { display: flex; gap: 18px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--line-light); font: 360 1.25rem/1.2 var(--serif); }
+  .oa-list li .label { color: var(--copper-light); }
+  @media (min-width: 1000px) { .oa-grid { grid-template-columns: 7fr 5fr; gap: calc(var(--gutter) * 2); } }
+
+  .vm-grid { display: grid; gap: 36px; align-items: center; }
+  .vm-img { aspect-ratio: 3 / 2; }
+  .vm-txt { display: grid; gap: 20px; justify-items: start; max-width: 460px; }
+  @media (min-width: 1000px) { .vm-grid { grid-template-columns: 7fr 5fr; gap: calc(var(--gutter) * 2); } }
+</style>

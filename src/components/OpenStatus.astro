@@ -1,0 +1,61 @@
+---
+// Live "open now" indicator computed in shop-local time. Falls back to static hours without JS.
+import { business } from '../data/site';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<p class={`open-status ${cls}`} data-open-status data-hours={JSON.stringify(business.hours)}>
+  <span class="dot" aria-hidden="true"></span>
+  <span data-open-text>Mon–Fri 6:30 AM–7 PM · Sat 7:30 AM–7 PM · Sun closed</span>
+</p>
+
+<script>
+  type H = { day: number; label: string; open: string | null; close: string | null };
+  const fmt = (t: string) => {
+    const [h, m] = t.split(':').map(Number);
+    const ap = h >= 12 ? 'PM' : 'AM';
+    const hh = ((h + 11) % 12) + 1;
+    return m ? `${hh}:${String(m).padStart(2, '0')} ${ap}` : `${hh} ${ap}`;
+  };
+  const mins = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+
+  function update() {
+    document.querySelectorAll<HTMLElement>('[data-open-status]').forEach((el) => {
+      const hours: H[] = JSON.parse(el.dataset.hours || '[]');
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Indiana/Indianapolis', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+      const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+      const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+      const now = Number(get('hour')) * 60 + Number(get('minute'));
+      const today = hours.find((h) => h.day === day);
+      let open = false;
+      let text = '';
+      if (today?.open && today.close && now >= mins(today.open) && now < mins(today.close)) {
+        open = true;
+        text = `Open now · until ${fmt(today.close)}`;
+      } else {
+        // find next opening
+        for (let i = 0; i < 8; i++) {
+          const d = hours.find((h) => h.day === (day + i) % 7);
+          if (!d?.open) continue;
+          if (i === 0 && now >= mins(d.open)) continue;
+          text = `Closed · opens ${i === 0 ? 'today' : i === 1 ? 'tomorrow' : d.label} ${fmt(d.open)}`;
+          break;
+        }
+      }
+      el.dataset.state = open ? 'open' : 'closed';
+      const t = el.querySelector('[data-open-text]');
+      if (t && text) t.textContent = text;
+    });
+  }
+  update();
+  setInterval(update, 60_000);
+</script>
+
+<style>
+  .open-status { display: inline-flex; align-items: center; gap: 10px; font: 560 var(--fs-label)/1.3 var(--sans); font-stretch: 115%; letter-spacing: .14em; text-transform: uppercase; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--stone); flex: none; position: relative; }
+  [data-state='open'] .dot { background: #7FA66A; }
+  [data-state='open'] .dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid #7FA66A; animation: ping 2.4s var(--ease) infinite; }
+  [data-state='closed'] .dot { background: var(--copper); }
+  @keyframes ping { from { transform: scale(.4); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+</style>

@@ -1,0 +1,20 @@
+---
+// Shows a confirmation after Shopify redirects back with ?contact_posted=true or ?customer_posted=true
+interface Props { kind: 'contact' | 'customer'; message: string }
+const { kind, message } = Astro.props;
+---
+<div class="form-notice" role="status" data-form-notice={kind} hidden>
+  <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.2" /><path d="M6 10.5l2.6 2.5L14 7.5" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+  <p>{message}</p>
+</div>
+<script>
+  const q = new URLSearchParams(location.search);
+  document.querySelectorAll<HTMLElement>('[data-form-notice]').forEach((el) => {
+    if (q.get(`${el.dataset.formNotice}_posted`) === 'true') { el.hidden = false; el.scrollIntoView({ block: 'center' }); }
+  });
+</script>
+<style>
+  .form-notice { display: flex; gap: 14px; align-items: center; padding: 18px 20px; background: color-mix(in srgb, var(--olive) 18%, transparent); border-left: 2px solid var(--olive); }
+  .form-notice[hidden] { display: none; }
+  .form-notice svg { width: 22px; height: 22px; flex: none; color: var(--olive); }
+</style>

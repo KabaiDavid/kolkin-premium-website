@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+---
+<Base title="Page not found — Kølkin Coffee" description="This page drifted downstream." noindex overlayHeader>
+  <section class="nf on-dark">
+    <img src="/textures/river-900.webp" alt="" class="nf-bg" width="900" height="900" />
+    <div class="wrap nf-inner">
+      <p class="label">404</p>
+      <h1 class="mega">Off the <em>line.</em></h1>
+      <p class="lead">This page drifted downstream. Catch the eddy and regroup.</p>
+      <div class="nf-ctas">
+        <a class="btn btn--light" href="/">Back home <Arrow /></a>
+        <a class="link" href="/collections/coffee">Shop coffee</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; }
+  .nf-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.45); }
+  .nf-inner { position: relative; padding-block: 20vh 12vh; display: grid; gap: 22px; justify-items: start; }
+  .nf-ctas { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; }
+</style>

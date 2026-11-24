@@ -1,0 +1,18 @@
+# Preserve legacy Shopify URLs (SEO + bookmarks)
+/collections/all              /collections/coffee 301
+/collections/all-products     /collections/coffee 301
+/pages/kolkin-wholesale       /wholesale 301
+/pages/menu                   /menu 301
+/pages/order-ahead            /visit#order-ahead 301
+/pages/contact                /contact 301
+/pages/careers                /careers 301
+/pages/rent-our-space         /community#rent 301
+/pages/kolkin-community-connections /journal 301
+/blogs/news                   /journal 301
+/blogs/kolkin-community-where-every-cup-tells-a-story /journal 301
+/blogs/kolkin-community-where-every-cup-tells-a-story/kolkin-community-connections-episode-1-where-every-cup-tells-a-story /journal/community-connections-episode-1 301
+/shop                         /collections/coffee 301
+/coffee                       /collections/coffee 301
+/story                        /our-story 301
+/about                        /our-story 301
+/checkout                     /cart 302

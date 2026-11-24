@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { products } from '../data/catalog';
+import { business } from '../data/site';
+---
+<Base title="Your Bag — Kølkin Coffee" description="Review your Kølkin Coffee bag and check out securely with Shopify." noindex>
+  <section class="cart wrap" data-cart aria-labelledby="cart-title">
+    <h1 id="cart-title" class="display">Your <em>bag.</em></h1>
+
+    <div class="cart-empty" data-cart-empty hidden>
+      <p class="lead">Nothing here yet — the current is calm.</p>
+      <a href="/collections/coffee" class="btn">Explore the coffee <Arrow /></a>
+    </div>
+
+    <div class="cart-grid" data-cart-full hidden>
+      <table class="cart-table">
+        <caption class="sr-only">Items in your bag</caption>
+        <thead><tr><th scope="col">Coffee</th><th scope="col">Quantity</th><th scope="col" class="r">Total</th></tr></thead>
+        <tbody data-cart-rows></tbody>
+      </table>
+
+      <aside class="cart-sum">
+        <dl>
+          <div><dt>Subtotal</dt><dd class="num" data-cart-subtotal></dd></div>
+          <div><dt>Shipping</dt><dd data-cart-ship></dd></div>
+        </dl>
+        <p class="cart-note">Taxes and shipping are calculated at Shopify checkout. Free shipping on orders over ${business.freeShippingThreshold}.</p>
+        <a class="btn btn--block" href="#" data-cart-checkout>Secure checkout <Arrow /></a>
+        <button type="button" class="link cart-clear" data-cart-clear>Empty bag</button>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section on-cream" aria-labelledby="more-t">
+    <div class="wrap">
+      <h2 id="more-t" class="h2 more-t">Add another <em>roast.</em></h2>
+      <ul class="more-grid" role="list">
+        {products.slice(0, 4).map((p) => <li><ProductCard product={p} compact /></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { bag, money } from '../scripts/bag';
+  const root = document.querySelector<HTMLElement>('[data-cart]')!;
+  const rows = root.querySelector('[data-cart-rows]')!;
+  const safeImg = (u?: string) => (u && /^\/[\w\-./]+$/.test(u) ? u : '');
+  const render = () => {
+    const lines = bag.lines();
+    (root.querySelector('[data-cart-empty]') as HTMLElement).hidden = lines.length > 0;
+    (root.querySelector('[data-cart-full]') as HTMLElement).hidden = lines.length === 0;
+    rows.replaceChildren(...lines.map((l) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><div class="ci"><a class="ci-img" href="/products/${encodeURIComponent(l.handle)}">${safeImg(l.image) ? `<img src="${safeImg(l.image)}" alt="" width="64" height="80">` : ''}</a>
+          <div><a class="ci-title" href="/products/${encodeURIComponent(l.handle)}"></a><p class="label label--muted ci-v"></p><p class="ci-each num"></p></div></div></td>
+        <td><div class="qty" role="group" aria-label="Quantity"><button type="button" data-d aria-label="Decrease quantity">−</button><span class="num">${l.qty}</span><button type="button" data-i aria-label="Increase quantity">+</button></div>
+          <button type="button" class="ci-rm" data-r>Remove</button></td>
+        <td class="r num">${money(l.price * l.qty)}</td>`;
+      tr.querySelector('.ci-title')!.textContent = l.title;
+      tr.querySelector('.ci-v')!.textContent = `${l.variantTitle} · Whole bean`;
+      tr.querySelector('.ci-each')!.textContent = `${money(l.price)} each`;
+      tr.querySelector('[data-d]')!.addEventListener('click', () => bag.setQty(l.variantId, l.qty - 1));
+      tr.querySelector('[data-i]')!.addEventListener('click', () => bag.setQty(l.variantId, l.qty + 1));
+      tr.querySelector('[data-r]')!.addEventListener('click', () => bag.remove(l.variantId));
+      return tr;
+    }));
+    const sub = bag.subtotal();
+    root.querySelector('[data-cart-subtotal]')!.textContent = money(sub);
+    root.querySelector('[data-cart-ship]')!.textContent = sub >= 30 ? 'Free' : `Free over $30 — ${money(30 - sub)} to go`;
+    (root.querySelector('[data-cart-checkout]') as HTMLAnchorElement).href = bag.checkoutUrl();
+  };
+  root.querySelector('[data-cart-clear]')!.addEventListener('click', () => bag.clear());
+  document.addEventListener('bag:change', render);
+  render();
+</script>
+
+<style>
+  .cart { padding-top: calc(var(--header-h) + clamp(40px, 6vw, 90px)); padding-bottom: clamp(64px, 8vw, 120px); display: grid; gap: 40px; }
+  .cart-empty { display: grid; gap: 22px; justify-items: start; }
+  .cart-empty[hidden], .cart-grid[hidden] { display: none; }
+  .cart-grid { display: grid; gap: 40px; }
+  .cart-table { width: 100%; border-collapse: collapse; }
+  .cart-table thead th { font: 560 var(--fs-label) var(--sans); font-stretch: 118%; letter-spacing: .16em; text-transform: uppercase; text-align: left; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
+  .cart-table :global(td) { padding: 20px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .cart-table .r, .cart-table :global(td.r) { text-align: right; }
+  .cart-table :global(.ci) { display: flex; gap: 16px; }
+  .cart-table :global(.ci-img) { width: 64px; flex: none; aspect-ratio: 4/5; background: var(--sand); display: block; }
+  .cart-table :global(.ci-img img) { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+  .cart-table :global(.ci-title) { font: 400 1.2rem/1.2 var(--serif); }
+  .cart-table :global(.ci-v) { margin-top: 6px; }
+  .cart-table :global(.ci-each) { margin-top: 6px; font-size: .9rem; color: var(--ink-soft); }
+  .cart-table :global(.qty) { display: inline-flex; align-items: center; border: 1px solid var(--line); }
+  .cart-table :global(.qty button) { width: 40px; height: 40px; }
+  .cart-table :global(.qty span) { min-width: 28px; text-align: center; }
+  .cart-table :global(.ci-rm) { display: block; margin-top: 8px; font-size: .85rem; color: var(--ink-soft); text-decoration: underline; min-height: 32px; }
+  .cart-sum { display: grid; gap: 18px; align-content: start; padding: 28px; background: var(--cream); }
+  .cart-sum dl div { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .cart-sum dt { font: 560 var(--fs-label) var(--sans); letter-spacing: .16em; text-transform: uppercase; font-stretch: 118%; }
+  .cart-note { font-size: .85rem; color: var(--ink-soft); }
+  .cart-clear { justify-self: center; }
+  @media (max-width: 640px) { .cart-table thead th:nth-child(2) { visibility: hidden; } .cart-table :global(td:nth-child(2)) { padding-left: 8px; } }
+  @media (min-width: 1000px) { .cart-grid { grid-template-columns: 8fr 4fr; gap: var(--gutter); } .cart-sum { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .more-t { margin-bottom: 32px; }
+  .more-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 14px; }
+  @media (min-width: 1000px) { .more-grid { grid-template-columns: repeat(4, 1fr); gap: var(--gutter); } }
+</style>

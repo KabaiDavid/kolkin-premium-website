@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+import Lines from '../components/Lines.astro';
+import Arrow from '../components/Arrow.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import FormNotice from '../components/FormNotice.astro';
+import { business, hoursSummary, SHOP_DOMAIN } from '../data/site';
+---
+<Base
+  title="Contact Kølkin Coffee — New Albany, Indiana"
+  description="Call (812) 599-8410, email kolkincoffee@gmail.com, or visit Kølkin Coffee at 2736 Charlestown Rd #5, New Albany, IN 47150. Send us a message for orders, events and wholesale."
+>
+  <section class="ct wrap" aria-labelledby="ct-title">
+    <header class="ct-head">
+      <p class="label eyebrow" data-reveal>Contact</p>
+      <Lines as="h1" id="ct-title" class="mega" lines={['Say', '*hello.*']} />
+    </header>
+
+    <div class="ct-grid">
+      <dl class="ct-info">
+        <div data-reveal><dt class="label">By phone</dt><dd><a class="h2 ct-big num" href={business.phoneHref}>{business.phoneDisplay}</a><span class="ct-sub">Call or text — we also take order-ahead pickups.</span></dd></div>
+        <div data-reveal style="--d:.06s"><dt class="label">By email</dt><dd><a class="h3 ct-big" href={`mailto:${business.email}`}>{business.email}</a></dd></div>
+        <div data-reveal style="--d:.12s"><dt class="label">The shop</dt><dd><a class="h3" href={business.directionsUrl} target="_blank" rel="noopener">{business.address.street}<br />{business.address.city}, IN {business.address.postal}</a>
+          <ul class="ct-hours">{hoursSummary.map((h) => <li><span>{h.days}</span><span class="num">{h.time}</span></li>)}</ul>
+          <OpenStatus /></dd></div>
+        <div data-reveal style="--d:.18s"><dt class="label">Follow</dt><dd class="ct-social"><a class="link" href={business.social.instagram} target="_blank" rel="noopener">Instagram</a><a class="link" href={business.social.facebook} target="_blank" rel="noopener">Facebook</a></dd></div>
+      </dl>
+
+      <form class="ct-form" method="post" action={`${SHOP_DOMAIN}/contact#contact_form`} accept-charset="UTF-8">
+        <h2 class="h3">Send a message</h2>
+        <FormNotice kind="contact" message="Thanks for reaching out — your message has been sent. We’ll reply soon." />
+        <input type="hidden" name="form_type" value="contact" />
+        <input type="hidden" name="utf8" value="✓" />
+        <div class="field"><label for="c-name">Name</label><input id="c-name" class="input" name="contact[name]" autocomplete="name" required /></div>
+        <div class="field"><label for="c-email">Email</label><input id="c-email" class="input" type="email" name="contact[email]" autocomplete="email" required /></div>
+        <div class="field"><label for="c-phone">Phone <span class="opt">(optional)</span></label><input id="c-phone" class="input" type="tel" name="contact[phone]" autocomplete="tel" /></div>
+        <div class="field"><label for="c-topic">Topic</label>
+          <select id="c-topic" class="input" name="contact[topic]">
+            <option>General question</option>
+            <option>Online order</option>
+            <option>Rent our space</option>
+            <option>Wholesale</option>
+            <option>Careers</option>
+          </select>
+        </div>
+        <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" class="input" name="contact[body]" rows="5" required></textarea></div>
+        <button type="submit" class="btn">Send message <Arrow /></button>
+        <p class="ct-fine">Messages are delivered through our Shopify store’s contact system. For wholesale, the <a class="text-link" href="/wholesale#apply">wholesale form</a> gets you the fastest answer.</p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ct { padding-top: calc(var(--header-h) + clamp(40px, 7vw, 110px)); padding-bottom: clamp(72px, 10vw, 150px); }
+  .ct-head { display: grid; gap: 22px; margin-bottom: clamp(48px, 6vw, 90px); }
+  .ct-grid { display: grid; gap: 64px; }
+  .ct-info { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .ct-info > div { display: grid; gap: 12px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .ct-info dt { color: var(--copper); }
+  .ct-info dd { display: grid; gap: 10px; justify-items: start; }
+  .ct-big { word-break: break-word; transition: color .3s; }
+  .ct-info a.h2:hover, .ct-info a.h3:hover { color: var(--copper); }
+  .ct-sub { color: var(--ink-soft); font-size: .95rem; }
+  .ct-hours { display: grid; gap: 4px; width: 100%; max-width: 360px; margin-top: 6px; }
+  .ct-hours li { display: flex; justify-content: space-between; color: var(--ink-soft); font-size: .95rem; }
+  .ct-social { display: flex !important; gap: 24px; }
+  .ct-form { display: grid; gap: 28px; align-content: start; background: var(--cream); padding: clamp(24px, 4vw, 48px); }
+  .ct-form .btn { justify-self: start; }
+  .opt { text-transform: none; letter-spacing: 0; font-weight: 400; opacity: .6; }
+  .ct-fine { font-size: .85rem; color: var(--ink-soft); }
+  @media (min-width: 1000px) { .ct-grid { grid-template-columns: 6fr 6fr; gap: calc(var(--gutter) * 2); } }
+</style>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /cart
+
+Sitemap: https://kolkin.coffee/sitemap-index.xml

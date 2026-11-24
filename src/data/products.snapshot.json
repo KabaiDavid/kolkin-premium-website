@@ -1,0 +1,267 @@
+{
+  "syncedAt": "2026-11-24T22:51:06.568Z",
+  "products": [
+    {
+      "id": 7980604686525,
+      "handle": "columbia-decaf",
+      "title": "Colombia Decaf",
+      "specs": {
+        "Process": "Swiss Water",
+        "Tasting Notes": "Graham, Mellow Fruit, Creamy, Tangy",
+        "Roast": "Medium",
+        "Grind Type": "Whole Bean"
+      },
+      "options": [
+        {
+          "name": "Bag Size",
+          "values": [
+            "12oz",
+            "16oz",
+            "5lb"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": 45166376124605,
+          "title": "12oz",
+          "price": 15,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 340
+        },
+        {
+          "id": 44931149955261,
+          "title": "16oz",
+          "price": 22,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 454
+        },
+        {
+          "id": 44931149988029,
+          "title": "5lb",
+          "price": 115,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 2268
+        }
+      ],
+      "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/COL_DECAF.png?v=1771531462",
+      "updatedAt": "2026-11-24T17:51:06-05:00"
+    },
+    {
+      "id": 7980605145277,
+      "handle": "columbia-huilla-natural",
+      "title": "Colombia Huilla-Excelso",
+      "specs": {
+        "Varietal": "Caturra, Castillo",
+        "Process": "Fully Washed",
+        "Tasting Notes": "Apricot, Honey, Red Apple",
+        "Roast": "Medium",
+        "Grind Type": "Whole Bean"
+      },
+      "options": [
+        {
+          "name": "Bag Size",
+          "values": [
+            "12oz",
+            "16oz",
+            "5lb"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": 45166362951869,
+          "title": "12oz",
+          "price": 15,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 340
+        },
+        {
+          "id": 44931151003837,
+          "title": "16oz",
+          "price": 22,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 454
+        },
+        {
+          "id": 44931151036605,
+          "title": "5lb",
+          "price": 115,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 2268
+        }
+      ],
+      "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/COL_HUI_EXC_b3793b40-f97b-437f-a00e-abf8892bac5e.png?v=1771531394",
+      "updatedAt": "2026-11-24T17:51:06-05:00"
+    },
+    {
+      "id": 7980605505725,
+      "handle": "kolkin-espresso-blend",
+      "title": "Kølkin Espresso Blend",
+      "specs": {
+        "Tasting Notes": "Butter, Apple, Plum, Nutt",
+        "Roast": "Medium",
+        "Grind Type": "Whole Bean"
+      },
+      "options": [
+        {
+          "name": "Bag Size",
+          "values": [
+            "12oz",
+            "16oz",
+            "5lb"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": 45166351614141,
+          "title": "12oz",
+          "price": 15,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 340
+        },
+        {
+          "id": 44931151528125,
+          "title": "16oz",
+          "price": 22,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 454
+        },
+        {
+          "id": 44931151560893,
+          "title": "5lb",
+          "price": 115,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 2268
+        }
+      ],
+      "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/ESPRESSO_BLEND_5168b802-de57-4509-8930-415f513f771f.png?v=1771531285",
+      "updatedAt": "2026-11-24T17:51:06-05:00"
+    },
+    {
+      "id": 7980605374653,
+      "handle": "guatemala-huehuetenango",
+      "title": "Guatemala SHB Huehuetenango Wayland",
+      "specs": {
+        "Varietal": "Bourbon, Catuai",
+        "Process": "Fully Washed",
+        "Tasting Notes": "Brown Sugar, Milk Chocolate, Orange",
+        "Roast": "Medium",
+        "Grind Type": "Whole Bean"
+      },
+      "options": [
+        {
+          "name": "Bag Size",
+          "values": [
+            "12oz",
+            "16oz",
+            "5lb"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": 45166341619901,
+          "title": "12oz",
+          "price": 15,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 454
+        },
+        {
+          "id": 44931151364285,
+          "title": "16oz",
+          "price": 22,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 454
+        },
+        {
+          "id": 44931151397053,
+          "title": "5lb",
+          "price": 115,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 2268
+        }
+      ],
+      "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/GUAT_HUE_a6e4c767-8f66-4450-aefb-ccea7d47f30f.png?v=1771531340",
+      "updatedAt": "2026-11-24T17:51:06-05:00"
+    },
+    {
+      "id": 7980605046973,
+      "handle": "ethiopia-yirgacheffe",
+      "title": "Ethiopia Washed Yirgacheffe Kosher",
+      "specs": {
+        "Varietal": "Ethiopian Heirloom",
+        "Process": "Fully Washed, Raised Beds",
+        "Tasting Notes": "B lack Tea, Floral, Orange",
+        "Roast": "Medium",
+        "Grind Type": "Whole Bean"
+      },
+      "options": [
+        {
+          "name": "Bag Size",
+          "values": [
+            "12oz",
+            "16oz",
+            "5lb"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": 45166367572157,
+          "title": "12oz",
+          "price": 15,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 340
+        },
+        {
+          "id": 44931150381245,
+          "title": "16oz",
+          "price": 22,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 454
+        },
+        {
+          "id": 44931150414013,
+          "title": "5lb",
+          "price": 115,
+          "compareAt": null,
+          "available": true,
+          "sku": null,
+          "grams": 2268
+        }
+      ],
+      "image": "https://cdn.shopify.com/s/files/1/0663/7577/8493/files/ethio_6b1c70b5-a6a9-4e46-9613-46c5bac60bdf.png?v=1771531430",
+      "updatedAt": "2026-11-24T17:51:06-05:00"
+    }
+  ]
+}
