@@ -34,7 +34,8 @@ const subject = encodeURIComponent('Application — Barista / Shopkeeper');
     <div class="cr-apply on-dark" data-reveal>
       <h2 class="h1">Ready to <em>apply?</em></h2>
       <p class="body-copy">Send your resume along with a short explanation of why you would make a great member of our team.</p>
-      <a class="btn btn--light" href={`mailto:${business.careersEmail}?subject=${subject}`}>Email {business.careersEmail} <Arrow /></a>
+      <a class="btn btn--light" href={`mailto:${business.careersEmail}?subject=${subject}`}>Apply by email <Arrow /></a>
+      <p class="cr-mail">{business.careersEmail}</p>
     </div>
   </section>
 </Base>
@@ -48,7 +49,7 @@ const subject = encodeURIComponent('Application — Barista / Shopkeeper');
   .cr-roles .label { color: var(--copper); }
   .cr-apply { padding: clamp(28px, 5vw, 64px); display: grid; gap: 20px; justify-items: start; }
   .cr-apply .body-copy { color: rgba(243,237,226,.78); }
-  .cr-apply .btn { white-space: normal; text-align: left; }
+  .cr-mail { font-size: .95rem; color: rgba(243,237,226,.7); overflow-wrap: anywhere; }
   @media (min-width: 1000px) {
     .cr { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
     .cr-head { grid-column: 1 / 8; }

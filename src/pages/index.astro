@@ -371,9 +371,9 @@ const fmt = (s: string) => s.replace(/\*(.+?)\*/g, '<em>$1</em>');
   .eddy-fallback img, .eddy-fallback :global(.fb-cup) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.6); }
   .eddy-fallback :global(.fb-cup) { opacity: clamp(0, calc((var(--p, 0) - .45) * 3), 1); transition: opacity .2s linear; }
   .eddy-ui { position: relative; height: 100%; pointer-events: none; }
-  .eddy-ticks { position: absolute; right: var(--gutter); top: 50%; transform: translateY(-50%); display: grid; gap: 22px; }
-  .eddy-ticks li { display: flex; align-items: center; gap: 10px; justify-content: flex-end; color: rgba(243,237,226,.35); transition: color .4s; }
-  .eddy-ticks li::after { content: ''; width: 18px; height: 1px; background: currentColor; transition: width .6s var(--ease); }
+  .eddy-ticks { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 28px; display: flex; gap: 28px; }
+  .eddy-ticks li { display: flex; flex-direction: column; gap: 10px; color: rgba(243,237,226,.35); transition: color .4s; flex: 1; max-width: 120px; }
+  .eddy-ticks li::before { content: ''; height: 1px; background: currentColor; }
   .eddy-beats { position: absolute; inset: 0; pointer-events: none; }
   .beat { position: absolute; left: 0; right: 0; top: calc(var(--k) * 100vh + 0vh); height: 100vh; display: flex; align-items: center; }
   .beat:first-child { top: 0; }
